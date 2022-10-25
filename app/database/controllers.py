@@ -32,3 +32,19 @@ class Database:
     def get_n_data_for_PCT(self, pct, n):
         """Return all the data for a given PCT."""
         return db.session.query(PrescribingData).filter(PrescribingData.PCT == pct).limit(n).all()
+
+    def get_average_act_cost(self):
+        """Return the average act cost of prescribed items with two decimal places."""
+        return round(db.session.query(func.avg(PrescribingData.ACT_cost).label('average_act_cost')).first()[0], 2)
+
+    def get_top_prescribed_item(self):
+        """Return the proportion of top prescribed items with two decimal places."""
+        max_quantity = int(db.session.query(func.max(PrescribingData.quantity)).first()[0])
+        total_quantity = int(db.session.query(func.sum(PrescribingData.quantity).label('total_quantity')).first()[0])
+        #item = db.session.query(func.sum(PrescribingData.items)).filter(PrescribingData.quantity == max_quantity)
+        #result = int(item.first()[0])/int(db.session.query(func.sum(PrescribingData.items).label('total_items')).first()[0])
+        return round((max_quantity/total_quantity)*100, 2)
+
+    def get_numberof_unique_items(self):
+        """Return number of unique items."""
+        return db.session.query(func.sum(PrescribingData.items)).filter(PrescribingData.items == 1).first()[0]
