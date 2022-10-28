@@ -32,3 +32,18 @@ class Database:
     def get_n_data_for_PCT(self, pct, n):
         """Return all the data for a given PCT."""
         return db.session.query(PrescribingData).filter(PrescribingData.PCT == pct).limit(n).all()
+
+    def get_max_quantity(self):
+        """Return the quantity of items with max quantity."""
+        max_quantity = int(db.session.query(func.max(PrescribingData.quantity)).first()[0])
+        return max_quantity
+
+    def get_total_quantity(self):
+        """Return the sum of quantity for total items."""
+        total_quantity = int(db.session.query(func.sum(PrescribingData.quantity).label('total_quantity')).first()[0])
+        return total_quantity
+
+    def get_max_quantity_item_name(self):
+        """Return the item with max quantity."""
+        max_quantity = self.get_max_quantity()
+        return db.session.query(PrescribingData.BNF_name).filter(PrescribingData.quantity == max_quantity).first()[0]
