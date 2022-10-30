@@ -51,4 +51,8 @@ class Database:
     def get_average_act_cost(self):
         """Return the average act cost of prescribed items."""
         return round(db.session.query(func.avg(PrescribingData.ACT_cost).label('average_act_cost')).first()[0], 2)
+    
+    def get_numberof_unique_items(self):
+        """Return the number of unique items"""
+        return db.session.query(func.count(PrescribingData.BNF_code.distinct())).first()[0] 
 
