@@ -184,11 +184,14 @@
                       <span class="text_col_black"></span>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ tile_data[2] }}%</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ top_name[0] }} ({{ quantity }})</div>
+                        </div>
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ top_data }}%</div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ tile_data[2] }}%" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{top_data}}%" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                         </div>
                       </div>
@@ -208,7 +211,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">NUMBER OF UNIQUE ITEMS:</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ tile_data[3] }}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{num_data[0]}}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-fingerprint fa-2x text-gray-300"></i>
@@ -329,7 +332,17 @@
                   <h6 class="m-0 font-weight-bold text-primary">About the prescribing dashboard</h6>
                 </div>
                 <div class="card-body">
-                  <p>?</p>
+                  <p>This dashboard is designed for a network of practice level prescribing data. It includes NHS
+                    prescriptions written in all registered GP practices in England and environments outside of a
+                    general practice, such as specialist clinics, hospices, prisons, out of hours services and
+                    training units.</p>
+                  <p>This dashboard brings together a range of data relating to summary statistics for prescribed
+                    items, and variation in medication use and prescribing for each PCT, to inform resources
+                    allocation and highlight medicine demands across local regions.</p>
+                  <h3>Our team</h3>
+                  <p>Myanmar is a collective of developers and contributors. Dedicated to creating a intuitive
+                    and clear version of healthcare-related dashboard.</p>
+                  <p>Chenge Hu/Heye Wang/ Mimansa Pandey/Shuhua Liu/ Wangting Su/Yuchen Ke/Yueer Fan</p>
                   <br />
                   <hr />
                    <button type="button" class="btn btn-danger" onclick="popup.hideAboutPopup();">Close</button>
