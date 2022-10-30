@@ -47,7 +47,7 @@ def home():
 
 def generate_data_for_tiles():
     """Generate the data for the four home page titles."""
-    return [db_mod.get_total_number_items()]
+    return [db_mod.get_total_number_items(), db_mod.get_average_act_cost()]
 
 def generate_description_for_top_item():
     """Generate the name for the item with max quantity."""
