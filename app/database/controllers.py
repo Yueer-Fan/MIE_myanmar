@@ -64,4 +64,3 @@ class Database:
         treatment_total_amount = db.session.query(func.count(PrescribingData.BNF_code.startswith("05"))).first()[0]
         for item in ['0501', '0502', '0503', '0504', '0505']:
             treatment_amount_agg.append(count_treatment(item)/treatment_total_amount)
-        return treatment_amount_agg

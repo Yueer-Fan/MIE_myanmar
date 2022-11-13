@@ -41,6 +41,7 @@ def home():
     num_unique_items = generate_data_for_unique_items()
     all_infection_treatments = generate_percentage_of_all_infection_treatment()
 
+
     # render the HTML page passing in relevant data
     return render_template('dashboard/index.html', tile_data=title_data_items,
                            top_data=percentage, top_name=top_item_name, quantity=max_quantity, num_data=num_unique_items,
