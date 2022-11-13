@@ -47,3 +47,8 @@ class Database:
         """Return the item with max quantity."""
         max_quantity = self.get_max_quantity()
         return db.session.query(PrescribingData.BNF_name).filter(PrescribingData.quantity == max_quantity).first()[0]
+
+    def get_average_act_cost(self):
+        """Return the average act cost of prescribed items."""
+        return round(db.session.query(func.avg(PrescribingData.ACT_cost).label('average_act_cost')).first()[0], 2)
+
