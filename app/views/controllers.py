@@ -39,7 +39,7 @@ def home():
     total_quantity = db_mod.get_total_quantity()
     percentage = round(max_quantity/total_quantity*100, 2)
     num_unique_items = generate_data_for_unique_items()
-    all_infection_treatments = generate_percentage_of_all_infection_treatment()
+    all_infection_treatments = db_mod.get_percentageof_all_infection_treatments()
 
 
     # render the HTML page passing in relevant data
@@ -73,6 +73,6 @@ def generate_barchart_data():
 
 def generate_percentage_of_all_infection_treatment():
     """Generate the percentage of infection drug needed to populate the barchart."""
-    percent_infection = db_mod.get_percentage_all_infection_treatments()
-    percent_infection = [r[0] for r in percent_infection]
-    return [percent_infection]
+    data_values = db_mod.get_percentageof_all_infection_treatments()
+    data_values = [r[0] for r in data_values]
+    return data_values
