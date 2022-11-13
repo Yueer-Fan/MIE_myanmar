@@ -34,10 +34,14 @@ class DatabaseTests(unittest.TestCase):
     def test_get_total_quantity(self):
         """Test that the sum of quantity for total items returns the correct value."""
         self.assertEquals(self.db_mod.get_total_quantity(), int(617395554.56), 'Test the sum of quantity for total items returns correct value')
+        
+    def test_get_numberof_unique_item(self):
+        """Test that number of unique items returns the correct value."""
+        self.assertEquals(self.db_mod.get_numberof_unique_items(), 13935, 'Test number of unique items returns correct value')
 
     def test_percentageof_all_infection_treatments(self):
         """Test that Infection treatment drug % of all infection treatments returns the correct value."""
         self.assertListEqual(self.db_mod.get_percentageof_all_infection_treatments(), [82.25, 5.22, 2.68, 9.62, 0.23], 'Test the Infection treatment drug % of all infection treatments returns the correct value')
-
+               
 if __name__ == "__main__":
     unittest.main()
