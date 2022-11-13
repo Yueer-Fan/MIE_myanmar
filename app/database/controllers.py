@@ -51,20 +51,7 @@ class Database:
     def get_average_act_cost(self):
         """Return the average act cost of prescribed items."""
         return round(db.session.query(func.avg(PrescribingData.ACT_cost).label('average_act_cost')).first()[0], 2)
-    
+
     def get_numberof_unique_items(self):
         """Return the number of unique items"""
         return db.session.query(func.count(PrescribingData.BNF_code.distinct())).first()[0]
-
-    def get_percentageof_all_infection_treatments(self):
-        """Return Infection treatment drug % of all infection treatments"""
-        def count_treatment(treatment):
-            return db.session.query(func.count(PrescribingData.BNF_code)).filter(PrescribingData.BNF_code.startswith(treatment)).first()[0]
-
-        treatment_amount_agg = []
-        treatment_total_amount = db.session.query(func.count(PrescribingData.BNF_code.startswith("05"))).first()[0]
-        for item in ['0501', '0502', '0503', '0504', '0505']:
-            treatment_amount_agg.append(count_treatment(item)/treatment_total_amount)
-        return treatment_amount_agg
-
-
