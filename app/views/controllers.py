@@ -43,9 +43,11 @@ def home():
     num_unique_items = generate_data_for_unique_items()
     all_infection_treatments = db_mod.get_percentageof_all_infection_treatments()
 
+
     bar = generate_antibiotics_barchart_data(selected_pct)
     bar_y = bar[0]
     bar_x = bar[1]
+
 
 
     # render the HTML page passing in relevant data
@@ -82,6 +84,7 @@ def generate_percentageof_all_infection_treatments():
     """Generate percentage of all infection treatments needed to populate the barchart."""
     data_values = db_mod.get_percentageof_all_infection_treatments()
     data_values = [r[0] for r in data_values]
+
     return data_values
 
 
@@ -94,3 +97,6 @@ def generate_antibiotics_barchart_data(pct):
     data_values = [r[0] for r in data_values]
     practice_codes = [r[0] for r in practice_codes]
     return [data_values, practice_codes]
+
+    return data_values
+

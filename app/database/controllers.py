@@ -78,3 +78,4 @@ class Database:
         """Return the total number of antibiotics per practice for a given PCT."""
         return db.session.query(func.sum(PrescribingData.items)).filter(PrescribingData.BNF_code.startswith("0501"),
                                                                         PrescribingData.PCT == pct).group_by(PrescribingData.practice).all()
+
