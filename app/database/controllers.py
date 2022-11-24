@@ -134,5 +134,5 @@ class Database:
         return db.session.query(PrescribingData.BNF_name).distinct().all()
 
     def get_bnf_code(self,drug):
-        return db.session.query(PrescribingData.BNF_name).filter(PrescribingData.BNF_code == drug).distinct().all()
+        return db.session.query(PrescribingData.BNF_code).filter(PrescribingData.BNF_name == drug).distinct().all()[0][0]
 
