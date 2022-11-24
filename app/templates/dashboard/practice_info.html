@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1</title>
+</head>
+<body>
+                              <table class="table">
+                                <thead>
+                                  <td>PCT</td>
+                                  <td>items</td>
+                                  <td>NIC</td>
+                                  <td>ACTcost</td>
+                                  <td>quantity</td>
+                                </thead>
+                                <tbody>
+                                  {% for row in drug_data %}
+                                  <tr>
+                                    <td>{{ row[0] }}</td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                    <td>{{ row[4] }}</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+</body>
+</html>
