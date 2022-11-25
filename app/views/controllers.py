@@ -81,7 +81,6 @@ def home():
     bar_x = bar[1]
 
 
-
     # render the HTML page passing in relevant data
     return render_template('dashboard/index.html', tile_data=title_data_items,
                            top_data=percentage, top_name=top_item_name, quantity=max_quantity, num_data=num_unique_items,
@@ -92,8 +91,7 @@ def home():
                            current_drug=current_drug,drug_data=selected_drug_data,drug_list=drugs,bnf_code=bnf_code)
 @views.route('/info', methods=['GET'])
 def info():
-
-    # print(request.args.get("id"))
+    """Generate the drug data for practices."""
     PCT = request.args.get("id")
     BNFNAME = request.args.get("name")
     selected_drug_data = db_mod.get_practice_drug(PCT, BNFNAME)
@@ -101,18 +99,23 @@ def info():
 
 @views.route('/nothing/', methods=['GET', 'POST'])
 def nothing():
+    """if the data doesn't exsit, show the view."""
     return render_template('dashboard/nothing.html')
+
 def generate_data_for_tiles():
     """Generate the data for the four home page titles."""
     return [db_mod.get_total_number_items(), db_mod.get_average_act_cost()]
+
 
 def generate_description_for_top_item():
     """Generate the name for the item with max quantity."""
     return [db_mod.get_max_quantity_item_name()]
 
+
 def generate_data_for_unique_items():
     """Generate the number of unique items."""
     return [db_mod.get_numberof_unique_items()]
+
 
 def generate_barchart_data():
     """Generate the data needed to populate the barchart."""
@@ -123,6 +126,7 @@ def generate_barchart_data():
     data_values = [r[0] for r in data_values]
     pct_codes = [r[0] for r in pct_codes]
     return [data_values, pct_codes]
+
 
 def generate_percentageof_all_infection_treatments():
     """Generate percentage of all infection treatments needed to populate the barchart."""
@@ -141,6 +145,3 @@ def generate_antibiotics_barchart_data(pct):
     data_values = [r[0] for r in data_values]
     practice_codes = [r[0] for r in practice_codes]
     return [data_values, practice_codes]
-
-    return data_values
-

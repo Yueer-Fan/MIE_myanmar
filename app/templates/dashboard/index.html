@@ -9,6 +9,18 @@
   <meta name="author" content="Alan Davies">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <link rel = "stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
+
+  <!-- integration of all important CDNs-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <title>Prescribing dashboard</title>
 
   <!-- Custom fonts for this template-->
@@ -33,6 +45,7 @@
   <script src="{{ url_for('static', filename='js/barchart.js') }}"></script>
   <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
 
+
   <!-- Page script -->
   <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
@@ -41,6 +54,7 @@
         $(document).ready(function () {
             initializeMain();
             barChart.drawChart({{pct|tojson}}, "bar-chart");
+            barChart.drawChart({{antibiotics|tojson}}, "bar-chart(2)");
         });
   </script>
 </head>
@@ -60,7 +74,7 @@
       <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <div class="nav-link" onclick="popup.showAboutPopup();">
+        <div class="nav-link" onclick="popup.showAboutPopup();" id="ab-box">
           <i class="fas fa-info-circle"></i>
           <span>About</span>
         </div>
@@ -74,11 +88,17 @@
         Main menu:
       </div>
 
-
+      <!-- Nav Item - Utilities Collapse Menu -->
+      <li class="nav-item">
+        <div class="nav-link" onclick="popup.showGeneRepoPopup();" id="gen-re">
+          <i class="fas fa-file-export"></i>
+          <span>Generate report</span>
+        </div>
+      </li>
 
       <!-- Nav Item - Utilities Collapse Menu -->
       <li class="nav-item">
-        <div class="nav-link" onclick="popup.showCeatCalcFormPopup();">
+        <div class="nav-link" onclick="popup.showCeatCalcFormPopup();" id="crea-cl">
           <i class="fas fa-calculator"></i>
           <span>Creatinine clearance</span>
         </div>
@@ -136,6 +156,7 @@
               <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
+          </ul>
         </nav>
         <!-- End of Topbar -->
 
@@ -157,7 +178,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total items:</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ tile_data[0] }}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="total_items">{{ tile_data[0] }}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-pills fa-2x text-gray-300"></i>
@@ -174,7 +195,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Average ACT cost:</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">£{{ tile_data[1] }}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="avg_cost">£{{ tile_data[1] }}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-pound-sign fa-2x text-gray-300"></i>
@@ -194,14 +215,14 @@
                       <span class="text_col_black"></span>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ top_name[0] }} ({{ quantity }})</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="top_nq">{{ top_name[0] }} ({{ quantity }})</div>
                         </div>
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ top_data }}%</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="top_data">{{ top_data }}%</div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: {{top_data}}%"
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ top_data }}%"
                               aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                         </div>
@@ -223,7 +244,7 @@
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">NUMBER OF UNIQUE ITEMS:
                       </div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{num_data[0]}}</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="num_uni">{{num_data[0]}}</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-fingerprint fa-2x text-gray-300"></i>
@@ -242,6 +263,19 @@
                     </div>
                     <div class="card-body">
                         <canvas id="bar-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Content Row -->
+          <div class="row">
+			<div class="col-xl-12 col-lg-7">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Antibiotics items per Practice in PCT</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="bar-chart(2)"></canvas>
                     </div>
                 </div>
             </div>
@@ -265,7 +299,7 @@
                         <div class="text-xs font-weight-bold">Antibacterials</div>
                       </div>
                       <div class="col" style="text-align:end">
-                        <div class="text-xs font-weight-bold">{{ all_infection_treatments_data[0] }}%</div>
+                        <div class="text-xs font-weight-bold" id="anti_b">{{ all_infection_treatments_data[0] }}%</div>
                       </div>
                     </div>
                     <div class="row no-gutters align-items-center">
@@ -282,7 +316,7 @@
                         <div class="text-xs font-weight-bold">Antifungal</div>
                       </div>
                       <div class="col" style="text-align:end">
-                        <div class="text-xs font-weight-bold">{{ all_infection_treatments_data[1] }}%</div>
+                        <div class="text-xs font-weight-bold" id="anti_f">{{ all_infection_treatments_data[1] }}%</div>
                       </div>
                     </div>
                     <div class="row no-gutters align-items-center">
@@ -299,7 +333,7 @@
                         <div class="text-xs font-weight-bold">Antiviral</div>
                       </div>
                       <div class="col" style="text-align:end">
-                        <div class="text-xs font-weight-bold">{{ all_infection_treatments_data[2] }}%</div>
+                        <div class="text-xs font-weight-bold" id="anti_v">{{ all_infection_treatments_data[2] }}%</div>
                       </div>
                     </div>
                     <div class="row no-gutters align-items-center">
@@ -316,7 +350,7 @@
                         <div class="text-xs font-weight-bold">Antiprotozoal</div>
                       </div>
                       <div class="col" style="text-align:end">
-                        <div class="text-xs font-weight-bold">{{ all_infection_treatments_data[3] }}%</div>
+                        <div class="text-xs font-weight-bold" id="anti_p">{{ all_infection_treatments_data[3] }}%</div>
                       </div>
                     </div>
                     <div class="row no-gutters align-items-center">
@@ -333,7 +367,7 @@
                         <div class="text-xs font-weight-bold">Anthelminics</div>
                       </div>
                       <div class="col" style="text-align:end">
-                        <div class="text-xs font-weight-bold">{{ all_infection_treatments_data[4] }}%</div>
+                        <div class="text-xs font-weight-bold" id="ant_h">{{ all_infection_treatments_data[4] }}%</div>
                       </div>
                     </div>
                     <div class="row no-gutters align-items-center">
@@ -343,25 +377,26 @@
                         </div>
                       </div>
                     </div>
-                  </div>      
+                  </div>
                   </div>
                 </div>
 
               </div>
               <div class="col-xl-6">
-                <!-- Show the BNF data for slected PCT -->
+                <!-- Show the BNF data for selected PCT -->
                 <div class="card shadow mb-4">
                   <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">BNF data per PCT</h6>
                   </div>
                   <div class="card-body">
-                    <form method=' POST' action="{{ url_for('dashboard.home') }}">
+                    <form method='POST' action="{{ url_for('dashboard.home') }}">
+                      <input type="hidden" name="form" value="form2">
                               <select class="custom-select" id="input-group-select" name="pct-option">
                                 {% for item in pct_list %}
                                 <option name="option-list" value="{{ item }}">{{ item }}</option>
                                 {% endfor %}
                               </select>
-                              <input type="submit" value="Update" class="btn btn-outline-secondary" />
+                              <input type="submit" value="Update" id="update" class="btn btn-outline-secondary" />
                               </form>
                               <hr />
                               <table class="table">
@@ -385,23 +420,74 @@
                             </div>
                           </div>
                         </div>
+              <div class="col-xl-6">
+
+                <!-- Show the drug data for slected drug_name/drug_code -->
+                <div class="card shadow mb-4">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Drug information per PCT</h6>
+                  </div>
+                  <div class="card-body">
+                    <form method='POST' action="{{ url_for('dashboard.home') }}" name="drug_name">
+                      <input type="hidden" name="form" value="form2">
+                     <input id="drug" name="drug" value="input BNF code or name" list="datalist"/>
+                      <datalist id="datalist">
+                        {% for row in drug_list %}
+                            <option>{{ row }}</option>
+                        {% endfor %}
+                      </datalist>
+                      <input id="search1" name="search1" type="submit" value="Search" class="btn btn-outline-secondary">
+                      <br>
+                      <td>Current drug: {{ current_drug }}</td>
+                      <br>
+                      <td>BNF code: {{ bnf_code }}</td>
+                      </form>
+                              <table class="table">
+                                <thead>
+                                  <td>PCT</td>
+                                  <td>Total items</td>
+                                  <td>Average NIC</td>
+                                  <td>Average ACTcost</td>
+                                  <td>Total drug quantity</td>
+                                  <td>Practice quantity</td>
+                                </thead>
+                                <tbody>
+                                  {% for row in drug_data %}
+                                  <tr>
+                                    <td id="practice_underpct{{row[0]}}">< a href=" 'dashboard.info',id = row[0],name=current_drug) }}" target="_blank">{{ row[0] }}</ a></td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                    <td>{{ row[4] }}</td>
+                                    <td>{{ row[5] }}</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
+
+
+
 
                     <!-- Creatinine clearance calculator -->
                     <div id="creat-calc">
                       <div class="card">
                         <div class="card-header py-3">
-                          <h6 class="m-0 font-weight-bold text-primary">Creatinine clearance calculator</h6>
+                          <h6 class="m-0 font-weight-bold text-primary">Creatinine clearance calculator (Cockcroft-Gault Equation)</h6>
                         </div>
                         <div class="card-body">
                           <p>Sex of patient:</p>
                           <div>
                             <label class="radio-inline">
-                              <input type="radio" name="sex" value="m"> Male
+                              <input type="radio" name="sex" value="m" id = "male"> Male
                             </label>
+
                             <label class="radio-inline">
-                              <input type="radio" name="sex" value="f"> Female
+                              <input type="radio" name="sex" value="f" id = "female"> Female
                             </label>
                             <p>Age of patient (years):</p>
                             <input type="number" min="1" max="120" name="patients-age" id="Age" />
@@ -412,12 +498,26 @@
                             <p>Serum creatinine (micromol/L):</p>
                             <input type="number" min="1" max="120" name="patients-serum" id="serum" />
                             <br id="br" />
+                            <br />
+                              <div class ="container">
+                                <div class="icon"><i class="fa fa-info" aria-hidden="true"></i> </div>
+                                <div class = "content">
+
+                                  <p style="font-size:15px;">
+                                    The typical range for serum creatinine is:
+                                    <br>For adult men, 0.74 to 1.35 mg/dL (65.4 to 119.3 micromoles/L)
+                                    <br>For adult women, 0.59 to 1.04 mg/dL (52.2 to 91.9 micromoles/L)
+                                  </p>
+                                </div>
+                              </div>
                           </div>
                           <br />
                           <hr />
-                          <button onclick="popup.calculate();" type="button" class="btn btn-primary">Calculate</button>
+                          <button onclick= "popup.calculate()" type="button" class="btn btn-primary" id="calculate">Calculate</button>
                           <button type="button" class="btn btn-danger"
-                            onclick="popup.hideCeatCalcFormPopup();">Close</button>
+                            onclick="popup.hideCeatCalcFormPopup();" id="close">Close</button>
+                          <button onclick="popup.reset()" type = "button" class = "btn btn-clear"
+                                  id="reset" value ="reset" style="font-face: 'Comic Sans MS'; color: white; background-color: #3be74a" >Reset</button>
                         </div>
                       </div>
                     </div>
@@ -442,7 +542,8 @@
                           <p>Chenge Hu/Heye Wang/ Mimansa Pandey/Shuhua Liu/ Wangting Su/Yuchen Ke/Yueer Fan</p>
                           <br />
                           <hr />
-                          <button type="button" class="btn btn-danger" onclick="popup.hideAboutPopup();">Close</button>
+                          <button type="button" class="btn btn-danger" id="close_about"
+                                  onclick="popup.hideAboutPopup();">Close</button>
                         </div>
                       </div>
                     </div>
@@ -451,6 +552,23 @@
 
       </div>
       <!-- End of Main Content -->
+                  <!-- Generate report -->
+                    <div id="gene-repo">
+                      <div class="card">
+                        <div class="card-header py-3">
+                          <h6 class="m-0 font-weight-bold text-primary">Generate report</h6>
+                        </div>
+                        <div class="card-body">
+                          <p>Sure you want to generate a downloadable summary?</p>
+                          <br />
+                          <button onclick="popup.generatereport();" type="button" class="btn btn-success" id="yes">Yes</button>
+                          <button type="button" class="btn btn-danger" id="no"
+                            onclick="popup.hideGeneRepoPopup();">No</button>
+                          <button type="button" class="btn btn-danger"
+                                  style="position:absolute;top:0;right:0" onclick="popup.hideGeneRepoPopup();">X</button>
+                        </div>
+                      </div>
+                    </div>
 
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
