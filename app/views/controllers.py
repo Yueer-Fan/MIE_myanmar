@@ -99,6 +99,9 @@ def info():
     selected_drug_data = db_mod.get_practice_drug(PCT, BNFNAME)
     return render_template('dashboard/practice_info.html', drug_data=selected_drug_data)
 
+@views.route('/nothing/', methods=['GET', 'POST'])
+def nothing():
+    return render_template('dashboard/nothing.html')
 def generate_data_for_tiles():
     """Generate the data for the four home page titles."""
     return [db_mod.get_total_number_items(), db_mod.get_average_act_cost()]
