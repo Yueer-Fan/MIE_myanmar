@@ -23,6 +23,16 @@
     opacity:0.5;
 }
 
+#gene-repo{
+    position:absolute;
+    top:2%;
+    left:10%;
+    width:45%;
+    height:auto;
+    display: none;
+    z-index:9999;
+}
+
 #creat-calc{
     position:absolute;
     top:2%;
