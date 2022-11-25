@@ -131,8 +131,13 @@ class Database:
 
     def get_distinct_drugcode(self):
         """Return the distinct drugcode codes."""
-        return db.session.query(PrescribingData.BNF_name).distinct().all()
+        return db.session.query(PrescribingData.BNF_code).distinct().all()
 
     def get_bnf_code(self,drug):
-        return db.session.query(PrescribingData.BNF_code).filter(PrescribingData.BNF_name == drug).distinct().all()[0][0]
+        if str(drug)[:5].isdigit() == True:
+            code_name = db.session.query(PrescribingData.BNF_name).filter(PrescribingData.BNF_code == drug).distinct().all()[0][0]
+        else:
+            code_name = db.session.query(PrescribingData.BNF_code).filter(PrescribingData.BNF_name == drug).distinct().all()[0][0]
+
+        return code_name
 
