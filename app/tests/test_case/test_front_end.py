@@ -9,7 +9,10 @@ class TestWebForm(unittest.TestCase):
     """Class for test basic functionality of a web-based input form."""
     def setUp(self):
         """Set up function to set the web driver Safari."""
+        with app.app_context():
+            self.db_mod = Database()
         self.driver = webdriver.Safari()
+        
 
     def test_input_form(self):
         driver = self.driver
@@ -111,6 +114,27 @@ class TestWebForm(unittest.TestCase):
         #         li.click()
         #         break
         # sleep(3)
+        """Test the button in drug information chart."""
+        driver.find_element_by_id('practice_underpct01R').click()
+        time.sleep(2)
+        
+        """Test the drug data is in the dataset."""
+        code = u"Mucogel_Susp 195mg/220mg/5ml S/F"
+        self.driver.find_element_by_id('drug').send_keys(code)
+        self.driver.find_element_by_id('search1').click()
+        with app.app_context():
+            drug_count = self.db_mod.get_n_data_for_drug_count(code)
+            #print(self.db_mod.get_n_data_for_drug_count(code))
+        assertGreater(drug_count, 0)
+        
+        """Test the drug data isn't in the dataset."""
+        ode = u"Mucogel_Susp 195mg/220mg/5ml S/FF"
+        self.driver.find_element_by_id('drug').send_keys(code)
+        self.driver.find_element_by_id('search1').click()
+        with app.app_context():
+            drug_count = self.db_mod.get_n_data_for_drug_count(code)
+            #print(self.db_mod.get_n_data_for_drug_count(code))
+        assertLessEqual(drug_count, 0)
 
     def tearDown(self):
         self.driver.quit()
