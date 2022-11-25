@@ -391,7 +391,7 @@
                   </div>
                   <div class="card-body">
                     <form method='POST' action="{{ url_for('dashboard.home') }}">
-                      <input type="hidden" name="form" value="form2">
+                      <input type="hidden" name="form" value="form1">
                               <select class="custom-select" id="input-group-select" name="pct-option">
                                 {% for item in pct_list %}
                                 <option name="option-list" value="{{ item }}">{{ item }}</option>

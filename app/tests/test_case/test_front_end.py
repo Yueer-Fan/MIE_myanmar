@@ -4,13 +4,14 @@ from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
 
+from app.database.controllers import Database
+
 
 class TestWebForm(unittest.TestCase):
     """Class for test basic functionality of a web-based input form."""
     def setUp(self):
         """Set up function to set the web driver Safari."""
-        with app.app_context():
-            self.db_mod = Database()
+        self.db_mod = Database()
         self.driver = webdriver.Safari()
         
 
@@ -77,64 +78,47 @@ class TestWebForm(unittest.TestCase):
         time.sleep(2)
 
         """Test data in BNF data per PCT."""
-        # js = "arguments[0].scrollIntoView()"11
-        # el = driver.find_element_by_id("input-group-select")
-        # driver.execute_script("document.documentElement.scrollTop=10000")
-        # time.sleep(2)
-        # lis = driver.find_element_by_id("input-group-select")
-        # ActionChains(driver).move_to_element(lis).click().perform()
-        # time.sleep(3)
-        # s = Select(lis)
-        # # s.select_by_value("RWW")
-        # s.select_by_index(8)
-        # time.sleep(3)
-        # driver.find_element_by_id("update").submit()
-        # time.sleep(5)
-        # driver.execute_script("document.documentElement.scrollTop=10000")
-        # time.sleep(2)
-        driver.execute_script("document.documentElement.scrollTop=10000")
+        driver.execute_script("window.scrollTo(0,500)")
         time.sleep(2)
         s = driver.find_element_by_css_selector("select#input-group-select")
         s.click()
         driver.find_element_by_id("input-group-select").send_keys("RWW")
         # s.find_element_by_css_selector("option[value='RWW']").click()
         time.sleep(3)
-        driver.find_element_by_id("update").submit()
+        driver.find_element_by_id("update").click()
         time.sleep(5)
-        driver.execute_script("document.documentElement.scrollTop=10000")
-        time.sleep(2)
-        # lis = driver.find_element_by_id("input-group-select")
-        # ActionChains(self.driver).move_to_element(lis).perform()
-        # driver.find_element_by_id("input-group-select").click()
-        # s = Select(lis)
-        # s.select_by_value("RWW")
+        driver.execute_script("window.scrollTo(0, 500)")
+        time.sleep(5)
 
-        # for li in lis:
-        #     if "RWW" in lis.text:
-        #         li.click()
-        #         break
-        # sleep(3)
-        """Test the button in drug information chart."""
-        driver.find_element_by_id('practice_underpct01R').click()
-        time.sleep(2)
-        
+        # """Test the drug data isn't in the dataset."""
+        # driver.execute_script("window.scrollTo(0,700)")
+        # time.sleep(2)
+        # code = u"Mucogel_Susp 195mg/220mg/5ml S/FF"
+        # driver.find_element_by_id('drug').send_keys(code)
+        # driver.find_element_by_id('search1').click()
+        # drug_count = self.db_mod.get_n_data_for_drug_count(code)
+        # # print(self.db_mod.get_n_data_for_drug_count(code))
+        # self.assertLessEqual(drug_count, 0)
+
         """Test the drug data is in the dataset."""
         code = u"Mucogel_Susp 195mg/220mg/5ml S/F"
         driver.find_element_by_id('drug').send_keys(code)
         driver.find_element_by_id('search1').click()
-        with app.app_context():
-            drug_count = self.db_mod.get_n_data_for_drug_count(code)
-            #print(self.db_mod.get_n_data_for_drug_count(code))
-        self.assertGreater(drug_count, 0)
-        
-        """Test the drug data isn't in the dataset."""
-        code = u"Mucogel_Susp 195mg/220mg/5ml S/FF"
-        driver.find_element_by_id('drug').send_keys(code)
+        # drug_count = self.db_mod.get_n_data_for_drug_count(code)
+        # # print(self.db_mod.get_n_data_for_drug_count(code))
+        # self.assertGreater(drug_count, 0)
+
+        driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+        time.sleep(2)
+
+        """Test the button in drug information chart."""
+        driver.find_element_by_id('drug').send_keys("Trandolapril_Cap 500mcg")
         driver.find_element_by_id('search1').click()
-        with app.app_context():
-            drug_count = self.db_mod.get_n_data_for_drug_count(code)
-            #print(self.db_mod.get_n_data_for_drug_count(code))
-        self.assertLessEqual(drug_count, 0)
+        driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+        driver.find_element_by_id('practice_underpct01D').click()
+        time.sleep(10)
+
+
         
     def tearDown(self):
         self.driver.quit()

@@ -134,15 +134,6 @@ def generate_barchart_data():
     pct_codes = [r[0] for r in pct_codes]
     return [data_values, pct_codes]
 
-
-def generate_percentageof_all_infection_treatments():
-    """Generate percentage of all infection treatments needed to populate the barchart."""
-    data_values = db_mod.get_percentageof_all_infection_treatments()
-    data_values = [r[0] for r in data_values]
-
-    return data_values
-
-
 def generate_antibiotics_barchart_data(pct):
     """Generate the antibiotics data needed to populate the barchart."""
     data_values = db_mod.get_n_antibiotics_per_practice_for_pct(pct)

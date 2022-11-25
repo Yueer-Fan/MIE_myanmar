@@ -105,6 +105,17 @@ class Database:
             drug_pct_total.append(drug_pct_all)
 
         return drug_pct_total
+    def get_n_data_for_drug_count(self, name_or_code):
+        """Return all the data for a given drug."""
+        # Find all data related with the drug
+        if str(name_or_code)[:5].isdigit() == True:
+            drug_origin = db.session.query(PrescribingData.PCT,PrescribingData.items,PrescribingData.NIC,PrescribingData.ACT_cost,PrescribingData.quantity).filter(PrescribingData.BNF_code == name_or_code).all()
+        else:
+            drug_origin = db.session.query(PrescribingData.PCT,PrescribingData.items,PrescribingData.NIC,PrescribingData.ACT_cost,PrescribingData.quantity).filter(PrescribingData.BNF_name == name_or_code).all()
+
+        drug_origin_pd = pd.DataFrame(drug_origin, columns=['PCT', 'ITEMS', 'NIC', 'ACTCOST', 'QUANTITY'])
+
+        return drug_origin_pd.shape[0]
 
     def get_practice_drug(self, PCT, BNFNAME):
         """Return all the data for a given drug."""
