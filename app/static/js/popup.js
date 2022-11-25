@@ -93,7 +93,7 @@ function Popup()
     }
 
 
-    popup.calculate = () =>{
+    popup.calculate = function() {//=>{
 
 
         //Getting required values
