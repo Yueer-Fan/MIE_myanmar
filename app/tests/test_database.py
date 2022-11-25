@@ -42,6 +42,9 @@ class DatabaseTests(unittest.TestCase):
     def test_percentageof_all_infection_treatments(self):
         """Test that Infection treatment drug % of all infection treatments returns the correct value."""
         self.assertListEqual(self.db_mod.get_percentageof_all_infection_treatments(), [82.25, 5.22, 2.68, 9.62, 0.23], 'Test the Infection treatment drug % of all infection treatments returns the correct value')
-               
+
+    def test_get_number_of_prescribed_antibiotics_in_RTV(self):
+        """Test the number of prescribed antibiotics per practice in RTV"""
+        self.assertListEqual(self.db_mod.get_n_antibiotics_per_practice_for_pct("RTV"), [9], 'Test number of antibiotics per practice in RTV returns correct value')
 if __name__ == "__main__":
     unittest.main()
