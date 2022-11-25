@@ -15,6 +15,10 @@ app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
+ctx = app.app_context()
+ctx.push()
+
+
 @app.errorhandler(404)
 def not_found(error):
     """Error page to show on page not found (404) error."""
@@ -26,4 +30,3 @@ from app.database.controllers import database as database_module
 
 app.register_blueprint(views_module)
 app.register_blueprint(database_module)
-
