@@ -12,7 +12,8 @@ from flask import Blueprint, render_template, request
 from app.database.controllers import Database
 
 views = Blueprint('dashboard', __name__, url_prefix='/dashboard')
-
+import pandas as pd
+import numpy as np
 # get the database class
 db_mod = Database()
 
@@ -24,12 +25,31 @@ def home():
     if request.method == 'POST':
         # if selecting PCT for table, update based on user choice
         form = request.form
-        selected_pct = str(form['pct-option'])
-        selected_pct_data = db_mod.get_n_data_for_PCT(str(form['pct-option']), 5)
+        if form['form'] == "form1":
+            selected_pct = str(form['pct-option'])
+            selected_pct_data = db_mod.get_n_data_for_PCT(str(form['pct-option']), 5)
+            selected_drug_data =  db_mod.get_n_data_for_drug('Mucogel_Susp 195mg/220mg/5ml S/F')
+            current_drug = str('Mucogel_Susp 195mg/220mg/5ml S/F')
+            bnf_code=str('0101010G0BCABAB')
+        else:
+            selected_pct = str(pcts[0])
+            selected_pct_data = db_mod.get_n_data_for_PCT(str(pcts[0]), 5)
+            selected_drug_data = db_mod.get_n_data_for_drug(str(form['drug']))
+            if str(form['drug'])[:5].isdigit() == True:
+                bnf_code = str(form['drug'])
+                current_drug = db_mod.get_bnf_code(str(form['drug']))
+            else:
+                bnf_code = db_mod.get_bnf_code(str(form['drug']))
+                current_drug = str(form['drug'])
+
+
     else:
         # pick a default PCT to show
         selected_pct = str(pcts[0])
         selected_pct_data = db_mod.get_n_data_for_PCT(str(pcts[0]), 5)
+        selected_drug_data = db_mod.get_n_data_for_drug('Mucogel_Susp 195mg/220mg/5ml S/F')
+        current_drug = str('Mucogel_Susp 195mg/220mg/5ml S/F')
+        bnf_code = str('0101010G0BCABAB')
 
     # prepare data
     bar_data = generate_barchart_data()
@@ -42,7 +62,26 @@ def home():
     percentage = round(max_quantity/total_quantity*100, 2)
     num_unique_items = generate_data_for_unique_items()
     all_infection_treatments = db_mod.get_percentageof_all_infection_treatments()
+    print(type(pcts),type(db_mod.get_distinct_drugname()))
 
+    drugs_name=[]
+    drugs_code=[]
+    for item in db_mod.get_distinct_drugname():
+        try:
+            drugs_name.append(item[0])
+        except:
+            print(0)
+
+    for item in db_mod.get_distinct_drugcode():
+        try:
+            drugs_code.append(item[0])
+        except:
+            print(0)
+    print(drugs_code)
+
+    # drugs_name = [r[0] for r in db_mod.get_distinct_drugname()]
+    # drugs_code = [r[0] for r in db_mod.get_distinct_drugcode()]
+    drugs = drugs_name + drugs_code
 
     bar = generate_antibiotics_barchart_data(selected_pct)
     bar_y = bar[0]
@@ -55,8 +94,20 @@ def home():
                            pct={'data': bar_values, 'labels': bar_labels},
                            pct_list=pcts, pct_data=selected_pct_data,
                            all_infection_treatments_data=all_infection_treatments,
-                           antibiotics={'data': bar_y, 'labels': bar_x})
+                           antibiotics={'data': bar_y, 'labels': bar_x},
+                           current_drug=current_drug,drug_data=selected_drug_data,drug_list=drugs,bnf_code=bnf_code)
+@views.route('/info', methods=['GET'])
+def info():
+    """Generate the drug data for practices."""
+    PCT = request.args.get("id")
+    BNFNAME = request.args.get("name")
+    selected_drug_data = db_mod.get_practice_drug(PCT, BNFNAME)
+    return render_template('dashboard/practice_info.html', drug_data=selected_drug_data)
 
+@views.route('/nothing/', methods=['GET', 'POST'])
+def nothing():
+    """if the data doesn't exsit, show the view."""
+    return render_template('dashboard/nothing.html')
 
 def generate_data_for_tiles():
     """Generate the data for the four home page titles."""
@@ -101,4 +152,3 @@ def generate_antibiotics_barchart_data(pct):
     data_values = [r[0] for r in data_values]
     practice_codes = [r[0] for r in practice_codes]
     return [data_values, practice_codes]
-

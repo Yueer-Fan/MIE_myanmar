@@ -12,7 +12,8 @@ from flask import Blueprint
 
 from app import db, app
 from app.database.models import PrescribingData, PracticeData
-
+import pandas as pd
+import numpy as np
 database = Blueprint('dbutils', __name__, url_prefix='/dbutils')
 
 class Database:
@@ -78,4 +79,65 @@ class Database:
         """Return the total number of antibiotics per practice for a given PCT."""
         return db.session.query(func.sum(PrescribingData.items)).filter(PrescribingData.BNF_code.startswith("0501"),
                                                                         PrescribingData.PCT == pct).group_by(PrescribingData.practice).all()
+
+    def get_n_data_for_drug(self, name_or_code):
+        """Return all the data for a given drug."""
+        # Find all data related with the drug
+        if str(name_or_code)[:5].isdigit() == True:
+            drug_origin = db.session.query(PrescribingData.PCT,PrescribingData.items,PrescribingData.NIC,PrescribingData.ACT_cost,PrescribingData.quantity).filter(PrescribingData.BNF_code == name_or_code).all()
+        else:
+            drug_origin = db.session.query(PrescribingData.PCT,PrescribingData.items,PrescribingData.NIC,PrescribingData.ACT_cost,PrescribingData.quantity).filter(PrescribingData.BNF_name == name_or_code).all()
+
+        drug_origin_pd = pd.DataFrame(drug_origin, columns=['PCT', 'ITEMS', 'NIC', 'ACTCOST', 'QUANTITY'])
+
+        pct = list(set(list(drug_origin_pd['PCT'])))
+        drug_pct_total =[]
+        for item in pct:
+            drug_select = drug_origin_pd[drug_origin_pd['PCT'] == item]
+            drug_pct_items = sum(drug_select['ITEMS'])
+            drug_pct_NIC = round(float(np.mean(drug_select['NIC'])),2)
+            drug_pct_ACTcost = round(float(np.mean(drug_select['ACTCOST'])),2)
+            drug_pct_quantity = round(float(np.mean(drug_select['QUANTITY'])),2)
+
+            drug_pct_practice = drug_select.shape[0]
+            print(drug_pct_practice)
+            drug_pct_all = [item, drug_pct_items, drug_pct_NIC, drug_pct_ACTcost, drug_pct_quantity, drug_pct_practice]
+            drug_pct_total.append(drug_pct_all)
+
+        return drug_pct_total
+
+    def get_practice_drug(self, PCT, BNFNAME):
+        """Return all the data for a given drug."""
+        # Find all data related with the drug
+        drug_origin = db.session.query(PrescribingData.practice,PrescribingData.items,PrescribingData.NIC,PrescribingData.ACT_cost,PrescribingData.quantity).filter(PrescribingData.BNF_name == BNFNAME, PrescribingData.PCT == PCT).all()
+
+        drug_origin_pd = pd.DataFrame(drug_origin, columns=['practice', 'ITEMS', 'NIC', 'ACTCOST', 'QUANTITY'])
+
+        pct = list(set(list(drug_origin_pd['practice'])))
+        drug_pct_total =[]
+        for item in pct:
+            drug_select = drug_origin_pd[drug_origin_pd['practice'] == item]
+            drug_pct_items = sum(drug_select['ITEMS'])
+            drug_pct_NIC = round(float(np.mean(drug_select['NIC'])),2)
+            drug_pct_ACTcost = round(float(np.mean(drug_select['ACTCOST'])),2)
+            drug_pct_quantity = round(float(np.mean(drug_select['QUANTITY'])),2)
+            drug_pct_all = [item, drug_pct_items, drug_pct_NIC, drug_pct_ACTcost, drug_pct_quantity]
+            drug_pct_total.append(drug_pct_all)
+
+        return drug_pct_total
+    def get_distinct_drugname(self):
+        """Return the distinct drugname names."""
+        return db.session.query(PrescribingData.BNF_name).distinct().all()
+
+    def get_distinct_drugcode(self):
+        """Return the distinct drugcode codes."""
+        return db.session.query(PrescribingData.BNF_code).distinct().all()
+
+    def get_bnf_code(self,drug):
+        if str(drug)[:5].isdigit() == True:
+            code_name = db.session.query(PrescribingData.BNF_name).filter(PrescribingData.BNF_code == drug).distinct().all()[0][0]
+        else:
+            code_name = db.session.query(PrescribingData.BNF_code).filter(PrescribingData.BNF_name == drug).distinct().all()[0][0]
+
+        return code_name
 
