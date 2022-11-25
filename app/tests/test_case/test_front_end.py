@@ -120,22 +120,22 @@ class TestWebForm(unittest.TestCase):
         
         """Test the drug data is in the dataset."""
         code = u"Mucogel_Susp 195mg/220mg/5ml S/F"
-        self.driver.find_element_by_id('drug').send_keys(code)
-        self.driver.find_element_by_id('search1').click()
+        driver.find_element_by_id('drug').send_keys(code)
+        driver.find_element_by_id('search1').click()
         with app.app_context():
             drug_count = self.db_mod.get_n_data_for_drug_count(code)
             #print(self.db_mod.get_n_data_for_drug_count(code))
-        assertGreater(drug_count, 0)
+        self.assertGreater(drug_count, 0)
         
         """Test the drug data isn't in the dataset."""
-        ode = u"Mucogel_Susp 195mg/220mg/5ml S/FF"
-        self.driver.find_element_by_id('drug').send_keys(code)
-        self.driver.find_element_by_id('search1').click()
+        code = u"Mucogel_Susp 195mg/220mg/5ml S/FF"
+        driver.find_element_by_id('drug').send_keys(code)
+        driver.find_element_by_id('search1').click()
         with app.app_context():
             drug_count = self.db_mod.get_n_data_for_drug_count(code)
             #print(self.db_mod.get_n_data_for_drug_count(code))
-        assertLessEqual(drug_count, 0)
-
+        self.assertLessEqual(drug_count, 0)
+        
     def tearDown(self):
         self.driver.quit()
 
