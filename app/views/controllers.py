@@ -35,8 +35,14 @@ def home():
             selected_pct = str(pcts[0])
             selected_pct_data = db_mod.get_n_data_for_PCT(str(pcts[0]), 5)
             selected_drug_data = db_mod.get_n_data_for_drug(str(form['drug']))
-            current_drug = str(form['drug'])
-            bnf_code = db_mod.get_bnf_code(str(form['drug']))
+            if str(form['drug'])[:5].isdigit() == True:
+                bnf_code = str(form['drug'])
+                current_drug = db_mod.get_bnf_code(str(form['drug']))
+            else:
+                bnf_code = db_mod.get_bnf_code(str(form['drug']))
+                current_drug = str(form['drug'])
+
+
     else:
         # pick a default PCT to show
         selected_pct = str(pcts[0])
@@ -66,11 +72,12 @@ def home():
         except:
             print(0)
 
-    try:
-        for item in db_mod.get_distinct_drugcode():
+    for item in db_mod.get_distinct_drugcode():
+        try:
             drugs_code.append(item[0])
-    except:
-        print(0)
+        except:
+            print(0)
+    print(drugs_code)
 
     # drugs_name = [r[0] for r in db_mod.get_distinct_drugname()]
     # drugs_code = [r[0] for r in db_mod.get_distinct_drugcode()]
