@@ -385,7 +385,42 @@
               <div class="col-xl-6">
                 <!-- Show the BNF data for selected PCT -->
                 <div class="card shadow mb-4">
-                  <div class="col-xl-6"">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">BNF data per PCT</h6>
+                  </div>
+                  <div class="card-body">
+                    <form method='POST' action="{{ url_for('dashboard.home') }}">
+                      <input type="hidden" name="form" value="form2">
+                              <select class="custom-select" id="input-group-select" name="pct-option">
+                                {% for item in pct_list %}
+                                <option name="option-list" value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                              </select>
+                              <input type="submit" value="Update" id="update" class="btn btn-outline-secondary" />
+                              </form>
+                              <hr />
+                              <table class="table">
+                                <thead>
+                                  <td>Practice</td>
+                                  <td>BNF code</td>
+                                  <td>BNF name</td>
+                                  <td>Items</td>
+                                </thead>
+                                <tbody>
+                                  {% for row in pct_data %}
+                                  <tr>
+                                    <td>{{ row.practice }}</td>
+                                    <td>{{ row.BNF_code }}</td>
+                                    <td>{{ row.BNF_name }}</td>
+                                    <td>{{ row.items }}</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+              <div class="col-xl-6">
 
                 <!-- Show the drug data for slected drug_name/drug_code -->
                 <div class="card shadow mb-4">
@@ -434,43 +469,7 @@
                         </div>
                       </div>
                     </div>
-                  <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">BNF data per PCT</h6>
-                  </div>
-                  <div class="card-body">
-                    <form method='POST' action="{{ url_for('dashboard.home') }}">
-                              <input type="hidden" name="form" value="form2">
-                              <select class="custom-select" id="input-group-select" name="pct-option">
-                                {% for item in pct_list %}
-                                <option name="option-list" value="{{ item }}">{{ item }}</option>
-                                {% endfor %}
-                              </select>
-                              <input type="submit" value="Update" id="update" class="btn btn-outline-secondary" />
-                              </form>
-                              <hr />
-                              <table class="table">
-                                <thead>
-                                  <td>Practice</td>
-                                  <td>BNF code</td>
-                                  <td>BNF name</td>
-                                  <td>Items</td>
-                                </thead>
-                                <tbody>
-                                  {% for row in pct_data %}
-                                  <tr>
-                                    <td>{{ row.practice }}</td>
-                                    <td>{{ row.BNF_code }}</td>
-                                    <td>{{ row.BNF_name }}</td>
-                                    <td>{{ row.items }}</td>
-                                  </tr>
-                                  {% endfor %}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
 
 
 
