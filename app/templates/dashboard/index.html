@@ -431,7 +431,7 @@
                   <div class="card-body">
                     <form method='POST' action="{{ url_for('dashboard.home') }}" name="drug_name">
                       <input type="hidden" name="form" value="form2">
-                     <input id="drug" name="drug" value="input BNF code or name" list="datalist"/>
+                     <input id="drug" name="drug" list="datalist"/>
                       <datalist id="datalist">
                         {% for row in drug_list %}
                             <option>{{ row }}</option>
