@@ -69,3 +69,13 @@ class Database:
             treatment_amount_agg.append(round(self.count_treatment(item) / treatment_total_amount * 100, 2))
 
         return treatment_amount_agg
+
+    def get_distinct_practice(self, pct):
+        """Return the distinct Practice codes."""
+        return db.session.query(PrescribingData.practice).filter(PrescribingData.PCT == pct).distinct().all()
+
+    def get_n_antibiotics_per_practice_for_pct(self, pct):
+        """Return the total number of antibiotics per practice for a given PCT."""
+        return db.session.query(func.sum(PrescribingData.items)).filter(PrescribingData.BNF_code.startswith("0501"),
+                                                                        PrescribingData.PCT == pct).group_by(PrescribingData.practice).all()
+
