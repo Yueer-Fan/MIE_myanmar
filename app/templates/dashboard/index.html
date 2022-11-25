@@ -385,11 +385,61 @@
               <div class="col-xl-6">
                 <!-- Show the BNF data for selected PCT -->
                 <div class="card shadow mb-4">
+                  <div class="col-xl-6"">
+
+                <!-- Show the drug data for slected drug_name/drug_code -->
+                <div class="card shadow mb-4">
+                  <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Drug information per PCT</h6>
+                  </div>
+                  <div class="card-body">
+                    <form method='POST' action="{{ url_for('dashboard.home') }}" name="drug_name">
+                      <input type="hidden" name="form" value="form2">
+                     <input id="drug" name="drug" value="input BNF code or name" list="datalist"/>
+                      <datalist id="datalist">
+                        {% for row in drug_list %}
+                            <option>{{ row }}</option>
+                        {% endfor %}
+                      </datalist>
+                      <input id="search1" name="search1" type="submit" value="Search" class="btn btn-outline-secondary">
+                      <br>
+                      <td>Current drug: {{ current_drug }}</td>
+                      <br>
+                      <td>BNF code: {{ bnf_code }}</td>
+                      </form>
+                              <table class="table">
+                                <thead>
+                                  <td>PCT</td>
+                                  <td>Total items</td>
+                                  <td>Average NIC</td>
+                                  <td>Average ACTcost</td>
+                                  <td>Total drug quantity</td>
+                                  <td>Practice quantity</td>
+                                </thead>
+                                <tbody>
+                                  {% for row in drug_data %}
+                                  <tr>
+                                    <td id="practice_underpct{{row[0]}}">< a href=" 'dashboard.info',id = row[0],name=current_drug) }}" target="_blank">{{ row[0] }}</ a></td>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                    <td>{{ row[4] }}</td>
+                                    <td>{{ row[5] }}</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">BNF data per PCT</h6>
                   </div>
                   <div class="card-body">
                     <form method='POST' action="{{ url_for('dashboard.home') }}">
+                              <input type="hidden" name="form" value="form2">
                               <select class="custom-select" id="input-group-select" name="pct-option">
                                 {% for item in pct_list %}
                                 <option name="option-list" value="{{ item }}">{{ item }}</option>
