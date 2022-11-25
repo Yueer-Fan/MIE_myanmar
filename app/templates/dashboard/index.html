@@ -33,6 +33,7 @@
   <script src="{{ url_for('static', filename='js/barchart.js') }}"></script>
   <script src="{{ url_for('static', filename='js/popup.js') }}"></script>
 
+
   <!-- Page script -->
   <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root | tojson | safe }};
@@ -41,6 +42,7 @@
         $(document).ready(function () {
             initializeMain();
             barChart.drawChart({{pct|tojson}}, "bar-chart");
+            barChart.drawChart({{antibiotics|tojson}}, "bar-chart(2)");
         });
   </script>
 </head>
@@ -246,6 +248,19 @@
                 </div>
             </div>
 
+             <!-- Content Row -->
+          <div class="row">
+			<div class="col-xl-12 col-lg-7">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Antibiotics items per Practice in PCT</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="bar-chart(2)"></canvas>
+                    </div>
+                </div>
+            </div>
+
             <!-- Content Row -->
             <div class="row last-row">
 
@@ -355,7 +370,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">BNF data per PCT</h6>
                   </div>
                   <div class="card-body">
-                    <form method=' POST' action="{{ url_for('dashboard.home') }}">
+                    <form method='POST' action="{{ url_for('dashboard.home') }}">
                               <select class="custom-select" id="input-group-select" name="pct-option">
                                 {% for item in pct_list %}
                                 <option name="option-list" value="{{ item }}">{{ item }}</option>
