@@ -101,5 +101,3 @@ def generate_antibiotics_barchart_data(pct):
     data_values = [r[0] for r in data_values]
     practice_codes = [r[0] for r in practice_codes]
     return [data_values, practice_codes]
-
-    return data_values
