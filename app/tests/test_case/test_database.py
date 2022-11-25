@@ -13,7 +13,6 @@ sys.path.append('../../..')
 import unittest
 
 from app.database.controllers import Database
-from app.views.controllers import generate_data_for_tiles
 
 class DatabaseTests(unittest.TestCase):
     """Class for testing database functionality and connection."""
