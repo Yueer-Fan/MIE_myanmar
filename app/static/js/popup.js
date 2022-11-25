@@ -64,5 +64,29 @@ function Popup()
         popupBox.style.left = (($(document).width() / 2) - (popupBox.offsetWidth / 2)) + "px";
     }
 
+    popup.calculate = () =>{
+
+        //Getting reuqired values
+        let age = document.getElementById("Age").value;
+        let weight = document.getElementById("Weight").value;
+        let sex = document.querySelector('input[name="sex"]:checked').value;
+        let cr = document.getElementById("serum").value;
+        //Using a boolean flag whether the sex is female
+        let isFemale = sex === 'f' ? true : false;
+
+        //Processing values through the formula
+        let result = popup.processValues(age,weight,isFemale,cr)
+
+        //Inserting result element in the DOM
+        let element = document.getElementById("br");
+        let newElement = `<p id="result">CrCl : ${result}</p>`
+        element.insertAdjacentHTML( 'afterend', newElement )
+    }
+
+    popup.processValues = (age,weight,isFemale,cr) => {
+        let genderFactor = isFemale ? 0.85 : 1;
+        return (140-age)*weight*genderFactor/(72*cr)
+    }
+
     return popup;
 }
