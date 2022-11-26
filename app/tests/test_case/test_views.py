@@ -5,7 +5,7 @@ import unittest
 
 from app.views.controllers import generate_data_for_tiles, generate_description_for_top_item, \
     generate_data_for_unique_items, generate_antibiotics_barchart_data, \
-    generate_barchart_data, home
+    generate_barchart_data
 
 
 class ViewsTests(unittest.TestCase):

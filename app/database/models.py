@@ -9,6 +9,7 @@ DESCRIPTION:   Database ORM class
 
 from app import db
 
+
 class PrescribingData(db.Model):
     """class for the prescription data table."""
     __tablename__ = 'practice_level_prescribing'
@@ -22,6 +23,7 @@ class PrescribingData(db.Model):
     NIC = db.Column(db.Float)
     ACT_cost = db.Column("ACTCOST", db.Float)
     quantity = db.Column(db.Integer)
+
 
 class PracticeData(db.Model):
     """Class for the practice address data table."""
