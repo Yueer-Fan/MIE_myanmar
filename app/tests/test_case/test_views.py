@@ -1,15 +1,26 @@
 import sys
+
+from app import app
+
 sys.path.append('../../..')
 
 import unittest
 
 from app.views.controllers import generate_data_for_tiles, generate_description_for_top_item, \
     generate_data_for_unique_items, generate_antibiotics_barchart_data, \
-    generate_barchart_data
+    generate_barchart_data, info, home
 
 
 class ViewsTests(unittest.TestCase):
     """Class for testing views functionality and connection."""
+
+    def setUp(self):
+        self.app = app.test_client()
+
+    def tearDown(self):
+        """Run post each test."""
+        pass
+
     def test_generate_data_for_tiles(self):
         self.assertEquals(generate_data_for_tiles(), [8218165, 76.22])
 
@@ -32,6 +43,14 @@ class ViewsTests(unittest.TestCase):
                                                          '113', '114', '116', '117', 'AJ6', 'DAN', 'Q45', 'RTR', 'RVW',
                                                          '00T', '00V', '00Y', '01D', '01G', '01W', '01Y']
                                                         ])
+
+    def test_info(self):
+        with app.test_request_context():
+            self.app.get(info(), follow_redirects=True)
+
+    def test_home(self):
+        with app.test_request_context():
+            self.app.get(home(), follow_redirects=True)
 
 
 if __name__ == "__main__":
