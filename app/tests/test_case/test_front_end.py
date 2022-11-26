@@ -87,22 +87,24 @@ class TestWebForm(unittest.TestCase):
         time.sleep(3)
         driver.find_element_by_id("update").click()
         time.sleep(5)
-        driver.execute_script("window.scrollTo(0, 500)")
+        driver.execute_script("window.scrollTo(0, 350)")
         time.sleep(5)
 
         """Test the drug data in the box."""
         code = u"Mucogel_Susp 195mg/220mg/5ml S/F"
         driver.find_element_by_id('drug').send_keys(code)
         driver.find_element_by_id('search1').click()
+        time.sleep(2)
         driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
         time.sleep(2)
 
         """Test the button in drug information chart."""
         driver.find_element_by_id('drug').send_keys("Trandolapril_Cap 500mcg")
         driver.find_element_by_id('search1').click()
+        time.sleep(2)
         driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
         driver.find_element_by_id('practice_underpct01D').click()
-        time.sleep(10)
+        time.sleep(5)
 
 
         

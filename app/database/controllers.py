@@ -16,6 +16,7 @@ import pandas as pd
 import numpy as np
 database = Blueprint('dbutils', __name__, url_prefix='/dbutils')
 
+
 class Database:
     """Class for managing database queries."""
     def get_total_number_items(self):
