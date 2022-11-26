@@ -35,12 +35,16 @@ def home():
             selected_pct = str(pcts[0])
             selected_pct_data = db_mod.get_n_data_for_PCT(str(pcts[0]), 5)
             selected_drug_data = db_mod.get_n_data_for_drug(str(form['drug']))
-            if str(form['drug'])[:5].isdigit() == True:
-                bnf_code = str(form['drug'])
-                current_drug = db_mod.get_bnf_code(str(form['drug']))
-            else:
-                bnf_code = db_mod.get_bnf_code(str(form['drug']))
-                current_drug = str(form['drug'])
+            try:
+                if str(form['drug'])[:5].isdigit() == True:
+                    bnf_code = str(form['drug'])
+                    current_drug = db_mod.get_bnf_code(str(form['drug']))
+                else:
+                    bnf_code = db_mod.get_bnf_code(str(form['drug']))
+                    current_drug = str(form['drug'])
+            except:
+                bnf_code = "The drug doesn't exist in our dataset."
+                current_drug = "The drug doesn't exist in our dataset."
 
 
     else:
