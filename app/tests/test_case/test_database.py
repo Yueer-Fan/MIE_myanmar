@@ -58,6 +58,34 @@ class DatabaseTests(unittest.TestCase):
     def test_get_number_of_prescribed_antibiotics_in_RTV(self):
         """Test the number of prescribed antibiotics per practice in RTV"""
         self.assertListEqual(self.db_mod.get_n_antibiotics_per_practice_for_pct("RTV"), [(9,)], 'Test number of antibiotics per practice in RTV returns correct value')
+    
+    def test_get_n_data_for_drug(self):
+        """Test the data in drug information of pct"""
+        # assertIn(a, b)
+        pct_list = ['12F','01G','01D','02E','00T','01R','00M','00D','01W','01C','00Y','00K','02F','00J']
+        self.assertIn(self.db_mod.get_n_data_for_drug("Mucogel_Susp 195mg/220mg/5ml S/F")[0][0],pct_list,'Test the data in drug information of pct')
+        
+    def test_get_n_data_for_drug_count(self):
+        """Test the unexsiting data in drug information of pct"""
+        self.assertEquals(self.db_mod.get_n_data_for_drug_count("Mucogel_Susp 195mg/220mg/5ml S/FF"), 0, 'Test the unexsiting data in drug information of pct')
+    
+    def test_get_practice_drug(self):
+        """Test the practice-drug data"""
+        practice_list = ['N85016','N85001','N85014','N85016','N85024','N85029','N85023','N85001']
+        self.assertIn(self.db_mod.get_practice_drug("12F", "Mucogel_Susp 195mg/220mg/5ml S/F")[0][0],practice_list,'Test the practice-drug data')
+    
+    def test_get_distinct_drugname(self):
+        """Test the distinct drug name data"""
+        self.assertEquals(len(self.db_mod.get_distinct_drugname()),13922,'Test the distinct drug name data')
+    
+    def test_get_distinct_drugcpde(self):
+        """Test the distinct drug code data"""
+        self.assertEquals(len(self.db_mod.get_distinct_drugcode()),13922,'Test the distinct drug code data')
+    
+    def test_get_bnf_code(self):
+        """Test whether the bnf name can be matched to the correct bnf code"""
+        self.assertEquals(self.db_mod.get_bnf_code("Mucogel_Susp 195mg/220mg/5ml S/F"),"0101010G0BCABAB",'Test whether the bnf name can be matched to the correct bnf code')
+
 
 
 if __name__ == "__main__":
